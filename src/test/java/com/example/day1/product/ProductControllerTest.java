@@ -19,5 +19,10 @@ class ProductControllerTest {
     @Test
     @DisplayName("Success case with git product by id = 1")
     void case01() {
+        // Act
+        ProductResponse result = restTemplate.getForObject("/api/product/1", ProductResponse.class);
+        // Assert
+        assertEquals(1, result.getId());
+        assertEquals("Product name 01", result.getName());
     }
 }
