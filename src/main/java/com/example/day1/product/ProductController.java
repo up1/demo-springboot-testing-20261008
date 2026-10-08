@@ -9,7 +9,10 @@ public class ProductController {
 
     @GetMapping("/api/product/{id}")
     public ProductResponse getById(@PathVariable int id) {
-        return new ProductResponse();
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(id);
+        productResponse.setName("Product name 01");
+        return productResponse;
     }
 
 }
