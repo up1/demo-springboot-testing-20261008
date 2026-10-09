@@ -43,7 +43,7 @@ class TodoGatewayComponentWithWiremockTest {
                       "title": "Mock title from wiremock",
                       "completed": false
                     }
-                    """)));
+                    """).withFixedDelay(5000)));
 
         // Act
         Optional<TodoResponse> result = todoGateway.getById(1);
