@@ -21,6 +21,6 @@ class TodoGatewayTest {
         // Assert
         assertTrue(result.isPresent());
         assertEquals(result.get().getId(), 1);
-        assertEquals(result.get().getTitle(), "delectus aut autem");
+        assertEquals("delectus aut autem", result.get().getTitle());
     }
 }
