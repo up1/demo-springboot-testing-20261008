@@ -1,0 +1,46 @@
+package com.example.day1.product;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
+class ProductControllerFailureTest {
+
+    @Autowired
+    TestRestTemplate restTemplate;
+
+    @MockitoBean
+    ProductRepository productRepository;
+
+    @Test
+    @DisplayName("Success case with get product by id = 1")
+    void case01() {
+        // Arrange
+        Product product = new Product();
+        product.setId(1);
+        product.setName("Product name 01");
+        when(productRepository.findById(1))
+                .thenReturn(Optional.of(product));
+
+        // Act
+        ProductResponse result = restTemplate.getForObject("/api/product/1", ProductResponse.class);
+
+        // Assert
+        assertEquals(1, result.getId());
+        assertEquals("Product name 01", result.getName());
+
+        verify(productRepository, times(1)).findById(1);
+    }
+}
