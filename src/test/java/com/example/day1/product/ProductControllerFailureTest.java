@@ -1,12 +1,15 @@
 package com.example.day1.product;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
@@ -23,6 +26,21 @@ class ProductControllerFailureTest {
 
     @MockitoBean
     ProductRepository productRepository;
+
+    @Test
+    @DisplayName("Product not found with id=2")
+    void case02() {
+        // Arrange
+        when(productRepository.findById(2))
+                .thenReturn(Optional.empty());
+
+        // Act
+        ResponseEntity<ProductResponse> result = restTemplate.getForEntity("/api/product/2", ProductResponse.class);
+
+        // Assert ... 404
+        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+
+    }
 
     @Test
     @DisplayName("Success case with get product by id = 1")
