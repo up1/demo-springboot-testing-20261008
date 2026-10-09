@@ -35,11 +35,11 @@ class ProductControllerFailureTest {
                 .thenReturn(Optional.empty());
 
         // Act
-        ResponseEntity<ProductResponse> result = restTemplate.getForEntity("/api/product/2", ProductResponse.class);
+        ResponseEntity<ErrorMessageResponse> result = restTemplate.getForEntity("/api/product/2", ErrorMessageResponse.class);
 
         // Assert ... 404
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-
+        assertEquals("Product not found in system", result.getBody().getMessage());
     }
 
     @Test
