@@ -1,6 +1,7 @@
 package com.example.day1.todo;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +11,9 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.Optional;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TodoGatewayComponentWithWiremockTest {
@@ -51,5 +50,19 @@ class TodoGatewayComponentWithWiremockTest {
         assertTrue(result.isPresent());
         assertEquals(result.get().getId(), 1);
         assertEquals("Mock title from wiremock", result.get().getTitle());
+    }
+
+    @Test
+    @DisplayName("Fail case with todo api return internal server error (500)")
+    void case02() {
+        // Arrange
+        todoApi.stubFor(get("/todos/1")
+                .willReturn(serverError()));
+
+        // Act and Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            todoGateway.getById(1);
+        });
+        assertEquals("Todo API error with status 500", exception.getMessage());
     }
 }
