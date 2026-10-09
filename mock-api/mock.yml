@@ -1,0 +1,7 @@
+-  request:
+      url: /todos/1
+   response:
+    - status: 200
+      headers:
+         content-type: application/json
+      file: 1.json
